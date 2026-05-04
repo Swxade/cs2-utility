@@ -474,16 +474,21 @@ html, body {
 #viewer { flex-direction: column; background: #000; }
 
 .viewer-bar {
-  flex-shrink: 0;
   height: 40px;
-  background: rgba(8,11,10,0.95);
+  background: rgba(8,11,10,0.92);
   border-bottom: 1px solid #1c2623;
   display: flex;
   align-items: center;
   padding: 0 14px;
   gap: 10px;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
-.viewer-bar.hidden { display: none; }
+#viewer:hover .viewer-bar { opacity: 1; }
+.viewer-bar.hidden { display: none !important; }
 
 .viewer-title {
   font-family: 'Barlow Condensed', sans-serif;
@@ -509,6 +514,7 @@ html, body {
 }
 
 .viewer-wrap {
+  position: relative;
   flex: 1;
   display: flex;
   align-items: stretch;
@@ -616,14 +622,14 @@ html, body {
 
 <!-- ════════════ VIEWER SCREEN ════════════ -->
 <div id="viewer" class="screen">
-  <div class="viewer-bar" id="viewerBar">
-    <button class="btn btn-ghost" style="padding:3px 11px;font-size:11px" onclick="closeViewer()">← Back</button>
-    <span class="viewer-title" id="viewerTitle"></span>
-    <div class="layout-select" id="layoutBtns"></div>
-    <span class="viewer-hint">H = hide bar · ESC = back</span>
-    <button class="btn btn-ghost" style="padding:3px 11px;font-size:11px;margin-left:4px" onclick="toggleFS()" id="fsBtn">⛶ Fullscreen</button>
-  </div>
   <div class="viewer-wrap">
+    <div class="viewer-bar" id="viewerBar">
+      <button class="btn btn-ghost" style="padding:3px 11px;font-size:11px" onclick="closeViewer()">← Back</button>
+      <span class="viewer-title" id="viewerTitle"></span>
+      <div class="layout-select" id="layoutBtns"></div>
+      <span class="viewer-hint">H = hide bar · ESC = back</span>
+      <button class="btn btn-ghost" style="padding:3px 11px;font-size:11px;margin-left:4px" onclick="toggleFS()" id="fsBtn">⛶ Fullscreen</button>
+    </div>
     <div class="viewer-grid" id="viewerGrid"></div>
   </div>
 </div>
@@ -916,7 +922,7 @@ function renderViewer(sel, layout) {
 
   // Even count that fills the grid perfectly → cover (no dead space)
   // Odd count or uneven grid → contain (no distortion/cropping)
-  const fit = 'cover';
+  const fit = 'contain';
 
   g.innerHTML = sel.map(i =>
     `<div class="viewer-cell"><img src="${imgUrl(i)}" alt="${i.label}" style="object-fit:${fit};object-position:center"></div>`
