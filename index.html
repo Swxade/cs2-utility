@@ -916,8 +916,7 @@ function renderViewer(sel, layout) {
 
   // Even count that fills the grid perfectly → cover (no dead space)
   // Odd count or uneven grid → contain (no distortion/cropping)
-  const gridFills = layout.c * layout.r === sel.length;
-  const fit = 'contain';
+  const fit = 'cover';
 
   g.innerHTML = sel.map(i =>
     `<div class="viewer-cell"><img src="${imgUrl(i)}" alt="${i.label}" style="object-fit:${fit};object-position:center"></div>`
