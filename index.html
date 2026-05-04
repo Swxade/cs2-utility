@@ -511,17 +511,15 @@ html, body {
 .viewer-wrap {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
   background: #000;
   overflow: hidden;
 }
 .viewer-grid {
+  flex: 1;
   display: grid;
   width: 100%;
   height: 100%;
-  max-width: calc(100vh * 16 / 9);
-  max-height: calc(100vw * 9 / 16);
 }
 .viewer-cell {
   overflow: hidden;
@@ -529,12 +527,11 @@ html, body {
   align-items: center;
   justify-content: center;
   background: #000;
-  aspect-ratio: 16/9;
 }
 .viewer-cell img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 
@@ -920,7 +917,7 @@ function renderViewer(sel, layout) {
   // Even count that fills the grid perfectly → cover (no dead space)
   // Odd count or uneven grid → contain (no distortion/cropping)
   const gridFills = layout.c * layout.r === sel.length;
-  const fit = (sel.length % 2 === 0 && gridFills) ? 'cover' : 'contain';
+  const fit = 'contain';
 
   g.innerHTML = sel.map(i =>
     `<div class="viewer-cell"><img src="${imgUrl(i)}" alt="${i.label}" style="object-fit:${fit};object-position:center"></div>`
