@@ -913,11 +913,16 @@ function renderViewer(sel, layout) {
   const g = document.getElementById('viewerGrid');
   g.style.gridTemplateColumns = `repeat(${layout.c}, 1fr)`;
   g.style.gridTemplateRows    = `repeat(${layout.r}, 1fr)`;
+
+  // Even count that fills the grid perfectly → cover (no dead space)
+  // Odd count or uneven grid → contain (no distortion/cropping)
+  const gridFills = layout.c * layout.r === sel.length;
+  const fit = (sel.length % 2 === 0 && gridFills) ? 'cover' : 'contain';
+
   g.innerHTML = sel.map(i =>
-    `<div class="viewer-cell"><img src="${imgUrl(i)}" alt="${i.label}"></div>`
+    `<div class="viewer-cell"><img src="${imgUrl(i)}" alt="${i.label}" style="object-fit:${fit}"></div>`
   ).join('');
 }
-
 function switchLayout(idx) {
   const lb = document.getElementById('layoutBtns');
   renderViewer(lb._sel, lb._layouts[idx]);
