@@ -918,9 +918,10 @@ function renderViewer(sel, layout) {
   // Odd count or uneven grid → contain (no distortion/cropping)
   const gridFills = layout.c * layout.r === sel.length;
   const fit = (sel.length % 2 === 0 && gridFills) ? 'cover' : 'contain';
+  const pos = fit === 'cover' ? 'left center' : 'center';
 
   g.innerHTML = sel.map(i =>
-    `<div class="viewer-cell"><img src="${imgUrl(i)}" alt="${i.label}" style="object-fit:${fit}"></div>`
+    `<div class="viewer-cell"><img src="${imgUrl(i)}" alt="${i.label}" style="object-fit:${fit};object-position:${pos}"></div>`
   ).join('');
 }
 function switchLayout(idx) {
