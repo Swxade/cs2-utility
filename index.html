@@ -471,7 +471,7 @@ html, body {
 /* ════════════════════════════════
    VIEWER SCREEN
 ════════════════════════════════ */
-#viewer { flex-direction: column; background: #000; }
+#viewer { flex-direction: column; background: #000; position: relative; }
 
 .viewer-bar {
   height: 40px;
@@ -514,10 +514,9 @@ html, body {
 }
 
 .viewer-wrap {
-  position: relative;
-  flex: 1;
+  position: absolute;
+  inset: 0;
   display: flex;
-  align-items: stretch;
   background: #000;
   overflow: hidden;
 }
