@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS2 Utility Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:           #080b0a;
+  --surface:      #0f1412;
+  --card:         #141a18;
+  --border:       #1c2623;
+  --border-bright:#263330;
+  --accent:       #c8a554;
+  --accent-dim:   rgba(200,165,84,0.15);
+  --ct:           #4a96d4;
+  --ct-dim:       rgba(74,150,212,0.12);
+  --t:            #c8943a;
+  --t-dim:        rgba(200,148,58,0.12);
+  --text:         #d8e4e0;
+  --text-dim:     #556660;
+  --text-mid:     #8fa8a0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; width: 100vw; height: 100vh; }
+.screen.active { display: flex; }
+
+/* ════════════════════════════════
+   PASSWORD SCREEN
+════════════════════════════════ */
+#loginScreen {
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  flex-direction: column;
+  gap: 0;
+}
+
+.login-box {
+  background: var(--surface);
+  border: 1px solid var(--border-bright);
+  border-radius: 6px;
+  padding: 40px 48px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-align: center;
+}
+
+.login-logo span {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-dim);
+  letter-spacing: 0.25em;
+  margin-top: 2px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-field label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.login-field input {
+  background: var(--card);
+  border: 1px solid var(--border-bright);
+  border-radius: 3px;
+  padding: 10px 14px;
+  font-size: 15px;
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.login-field input:focus { border-color: var(--accent); }
+.login-field input.error  { border-color: #e06060; }
+
+.login-error {
+  font-size: 12px;
+  color: #e06060;
+  text-align: center;
+  min-height: 16px;
+}
+
+.btn-login {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 11px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: #0a0c0b;
+  transition: filter 0.15s;
+}
+.btn-login:hover { filter: brightness(1.12); }
+
+/* ════════════════════════════════
+   PICKER SCREEN
+════════════════════════════════ */
+#picker { flex-direction: column; }
+
+.picker-header {
+  flex-shrink: 0;
+  padding: 16px 24px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.logo span {
+  color: var(--text-dim);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  display: block;
+  margin-top: -1px;
+}
+
+.header-actions { display: flex; gap: 10px; align-items: center; }
+
+.btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.15s;
+  background: transparent;
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0a0c0b;
+}
+.btn-primary:hover { filter: brightness(1.12); }
+.btn-primary:disabled { opacity: 0.3; cursor: not-allowed; filter: none; }
+.btn-ghost { color: var(--text-mid); border-color: var(--border-bright); }
+.btn-ghost:hover { color: var(--text); border-color: var(--text-mid); }
+
+.selected-count {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(200,165,84,0.2);
+}
+
+/* ── BODY ── */
+.picker-body { flex: 1; display: flex; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border-bright);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-section {
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sidebar-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.side-toggle { display: flex; gap: 5px; }
+.side-btn {
+  flex: 1;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 0;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid var(--border-bright);
+  background: transparent;
+  color: var(--text-dim);
+  transition: all 0.12s;
+}
+.side-btn.active-ct { background: var(--ct-dim); border-color: rgba(74,150,212,0.35); color: var(--ct); }
+.side-btn.active-t  { background: var(--t-dim);  border-color: rgba(200,148,58,0.35); color: var(--t); }
+.side-btn.active-all{ background: var(--accent-dim); border-color: rgba(200,165,84,0.3); color: var(--accent); }
+
+.nav-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.nav-list::-webkit-scrollbar { width: 4px; }
+.nav-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.nav-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-mid);
+  text-align: left;
+  transition: all 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.nav-btn:hover { background: var(--card); color: var(--text); }
+.nav-btn.active {
+  background: var(--accent-dim);
+  border-color: rgba(200,165,84,0.2);
+  color: var(--accent);
+}
+.nav-btn.child {
+  font-size: 12px;
+  font-weight: 600;
+  padding-left: 22px;
+  color: var(--text-dim);
+  text-transform: none;
+  letter-spacing: 0.03em;
+}
+.nav-btn.child:hover { color: var(--text-mid); }
+.nav-btn.child.active { color: var(--accent); }
+.nav-count {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+/* ── MAIN AREA ── */
+.main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.toolbar {
+  flex-shrink: 0;
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toolbar-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.toolbar-sub { font-size: 11px; color: var(--text-dim); margin-left: auto; }
+
+/* ── CARD GRID ── */
+.card-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+  align-content: start;
+}
+.card-grid::-webkit-scrollbar { width: 6px; }
+.card-grid::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+
+.util-card {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--card);
+  position: relative;
+}
+.util-card:hover { border-color: var(--border-bright); transform: translateY(-1px); }
+.util-card.sel-ct { border-color: var(--ct);    box-shadow: 0 0 0 1px var(--ct),    0 4px 14px rgba(74,150,212,0.15); }
+.util-card.sel-t  { border-color: var(--t);     box-shadow: 0 0 0 1px var(--t),     0 4px 14px rgba(200,148,58,0.15); }
+
+.util-card img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+}
+
+/* Loading skeleton */
+.util-card .img-wrap {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.util-card .img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+.util-card .img-wrap.loaded::after { display: none; }
+
+.card-meta {
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.card-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.1;
+}
+.card-sub { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+
+.side-tag {
+  font-size: 9px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.tag-ct { background: var(--ct-dim); color: var(--ct); border: 1px solid rgba(74,150,212,0.2); }
+.tag-t  { background: var(--t-dim);  color: var(--t);  border: 1px solid rgba(200,148,58,0.2); }
+
+.check-circle {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-bright);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: transparent;
+  flex-shrink: 0;
+  transition: all 0.12s;
+}
+.util-card.sel-ct .check-circle { background: var(--ct); border-color: var(--ct); color: #fff; }
+.util-card.sel-t  .check-circle { background: var(--t);  border-color: var(--t);  color: #fff; }
+
+/* ── EMPTY STATE ── */
+.empty {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-dim);
+}
+.empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.35; }
+.empty-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  margin-bottom: 6px;
+}
+.empty p { font-size: 12px; line-height: 1.7; max-width: 280px; margin: 0 auto; }
+
+/* ── LOADING SCREEN ── */
+.loading-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px;
+  z-index: 999;
+  transition: opacity 0.4s;
+}
+.loading-overlay.hide { opacity: 0; pointer-events: none; }
+.loading-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 30px; font-weight: 900;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent);
+}
+.loading-bar-wrap {
+  width: 200px; height: 3px;
+  background: var(--border-bright);
+  border-radius: 2px; overflow: hidden;
+}
+.loading-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.3s;
+}
+.loading-text { font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; }
+
+/* ════════════════════════════════
+   VIEWER SCREEN
+════════════════════════════════ */
+#viewer { flex-direction: column; background: #000; }
+
+.viewer-bar {
+  flex-shrink: 0;
+  height: 40px;
+  background: rgba(8,11,10,0.95);
+  border-bottom: 1px solid #1c2623;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+}
+.viewer-bar.hidden { display: none; }
+
+.viewer-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: #667a75;
+}
+.viewer-hint { font-size: 11px; color: #334440; margin-left: auto; }
+
+.layout-select { display: flex; gap: 4px; }
+.layout-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  padding: 3px 9px; border-radius: 2px; cursor: pointer;
+  border: 1px solid var(--border-bright);
+  background: transparent; color: var(--text-dim);
+  transition: all 0.12s;
+}
+.layout-btn.active, .layout-btn:hover {
+  background: var(--accent-dim);
+  border-color: rgba(200,165,84,0.3);
+  color: var(--accent);
+}
+
+.viewer-wrap {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  background: #000;
+  overflow: hidden;
+}
+.viewer-grid {
+  flex: 1;
+  display: grid;
+  width: 100%;
+  height: 100%;
+}
+.viewer-cell {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+.viewer-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── NOTIFICATION ── */
+.notif {
+  position: fixed; bottom: 22px; left: 50%;
+  transform: translateX(-50%) translateY(70px);
+  background: var(--surface);
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  padding: 9px 18px;
+  font-size: 12px; color: var(--text);
+  z-index: 9999;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none; white-space: nowrap;
+}
+.notif.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ════════════ LOADING OVERLAY ════════════ -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">CS2 Utility</div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+  <div class="loading-text" id="loadingText">Loading lineups…</div>
+</div>
+
+<!-- ════════════ LOGIN SCREEN ════════════ -->
+<div id="loginScreen" class="screen">
+  <div class="login-box">
+    <div class="login-logo">CS2 Utility<span>Lineup Viewer</span></div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="pwInput" placeholder="Enter password"
+             onkeydown="if(event.key==='Enter')tryLogin()">
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="btn-login" onclick="tryLogin()">Enter</button>
+  </div>
+</div>
+
+<!-- ════════════ PICKER SCREEN ════════════ -->
+<div id="picker" class="screen">
+  <div class="picker-header">
+    <div class="logo">CS2 Utility<span>Lineup Viewer</span></div>
+    <div class="header-actions">
+      <span class="selected-count" id="selCount" style="display:none">0 selected</span>
+      <button class="btn btn-ghost" id="clearBtn" onclick="clearAll()" style="display:none">Clear</button>
+      <button class="btn btn-primary" id="viewBtn" onclick="openViewer()" disabled>View →</button>
+    </div>
+  </div>
+
+  <div class="picker-body">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Side</div>
+        <div class="side-toggle">
+          <button class="side-btn active-ct" id="btnCT"  onclick="setSide('CT')">CT</button>
+          <button class="side-btn"           id="btnT"   onclick="setSide('T')">T</button>
+          <button class="side-btn"           id="btnAll" onclick="setSide('ALL')">All</button>
+        </div>
+      </div>
+      <div class="sidebar-section" style="padding-bottom:6px">
+        <div class="sidebar-label">Browse</div>
+      </div>
+      <div class="nav-list" id="navList"></div>
+    </div>
+
+    <div class="main-area">
+      <div class="toolbar">
+        <div>
+          <div class="toolbar-title" id="toolbarTitle">All</div>
+        </div>
+        <div class="toolbar-sub" id="toolbarSub"></div>
+        <button class="btn btn-ghost" style="font-size:11px;padding:4px 11px" onclick="selectAllVisible()">Select All</button>
+      </div>
+      <div class="card-grid" id="cardGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ VIEWER SCREEN ════════════ -->
+<div id="viewer" class="screen">
+  <div class="viewer-bar" id="viewerBar">
+    <button class="btn btn-ghost" style="padding:3px 11px;font-size:11px" onclick="closeViewer()">← Back</button>
+    <span class="viewer-title" id="viewerTitle"></span>
+    <div class="layout-select" id="layoutBtns"></div>
+    <span class="viewer-hint">H = hide bar · ESC = back</span>
+    <button class="btn btn-ghost" style="padding:3px 11px;font-size:11px;margin-left:4px" onclick="toggleFS()" id="fsBtn">⛶ Fullscreen</button>
+  </div>
+  <div class="viewer-wrap">
+    <div class="viewer-grid" id="viewerGrid"></div>
+  </div>
+</div>
+
+<!-- Notification -->
+<div class="notif" id="notif"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIG — update these for your repo
+// ══════════════════════════════════════════════
+const GITHUB_USER   = 'Swxade';
+const GITHUB_REPO   = 'cs2-utility';
+const GITHUB_BRANCH = 'main';
+const IMAGES_FOLDER = 'images';
+
+// Password hash — SHA-256 of the password.
+// Current password: "cs2utility"  ← CHANGE THIS before sharing
+// To generate a new hash, run in browser console:
+//   crypto.subtle.digest('SHA-256', new TextEncoder().encode('yourpassword'))
+//     .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
+const PASSWORD_HASH = '204f16d394776b56fb7a19e67a46625a12d4c3edac8474a78b7a5d36f667ee52';
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const S = {
+  images:   [],
+  selected: new Set(),
+  filter:   { map: 'ALL', type: 'ALL', side: 'CT' },
+  barHidden: false,
+};
+
+const RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${IMAGES_FOLDER}`;
+const MAPS     = ['Ancient','Anubis','Dust2','Inferno','Mirage','Nuke','Vertigo'];
+
+// ══════════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════════
+async function boot() {
+  // Check session
+  const authed = sessionStorage.getItem('cs2auth');
+  if (authed === PASSWORD_HASH) {
+    await loadManifest();
+  } else {
+    setLoading(false);
+    show('loginScreen');
+  }
+}
+
+function setLoading(on, text = 'Loading lineups…', pct = 0) {
+  const el = document.getElementById('loadingOverlay');
+  if (on) {
+    el.classList.remove('hide');
+    document.getElementById('loadingText').textContent = text;
+    document.getElementById('loadingBar').style.width  = pct + '%';
+  } else {
+    el.classList.add('hide');
+  }
+}
+
+// ══════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════
+async function tryLogin() {
+  const pw    = document.getElementById('pwInput').value;
+  const errEl = document.getElementById('loginError');
+  const input = document.getElementById('pwInput');
+
+  const hashBuf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  const hash    = [...new Uint8Array(hashBuf)].map(x => x.toString(16).padStart(2,'0')).join('');
+
+  if (hash === PASSWORD_HASH) {
+    sessionStorage.setItem('cs2auth', hash);
+    input.classList.remove('error');
+    errEl.textContent = '';
+    show('loginScreen', false);
+    await loadManifest();
+  } else {
+    input.classList.add('error');
+    errEl.textContent = 'Incorrect password.';
+    input.value = '';
+    input.focus();
+  }
+}
+
+// ══════════════════════════════════════════════
+// MANIFEST
+// ══════════════════════════════════════════════
+async function loadManifest() {
+  setLoading(true, 'Fetching lineup data…', 10);
+  try {
+    const url = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/manifest.json?_=${Date.now()}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('manifest.json not found');
+    const data = await res.json();
+    S.images = data.images || [];
+    setLoading(true, `Found ${S.images.length} lineups`, 100);
+    setTimeout(() => {
+      setLoading(false);
+      show('picker');
+      renderAll();
+    }, 400);
+  } catch(e) {
+    setLoading(true, `Error: ${e.message} — check repo setup`, 0);
+    console.error(e);
+  }
+}
+
+function imgUrl(entry) {
+  return `${RAW_BASE}/${encodeURIComponent(entry.map)}/${encodeURIComponent(entry.utilityType)}/${encodeURIComponent(entry.side === 'CT' ? 'CT Side' : 'T Side')}/${encodeURIComponent(entry.path.split('/').pop())}`;
+}
+
+// ══════════════════════════════════════════════
+// SIDEBAR NAV
+// ══════════════════════════════════════════════
+function renderNav() {
+  const f    = S.filter;
+  const list = document.getElementById('navList');
+
+  // Unique maps that have content
+  const mapsWithData = MAPS.filter(m => S.images.some(i => i.map === m));
+
+  list.innerHTML = `
+    <button class="nav-btn ${f.map==='ALL' && f.type==='ALL' ? 'active' : ''}"
+      onclick="setFilter('map','ALL');setFilter('type','ALL')">
+      All <span class="nav-count">${S.images.length}</span>
+    </button>
+    ${mapsWithData.map(m => {
+      const mapImgs  = S.images.filter(i => i.map === m);
+      const mapActive = f.map === m;
+      const types    = [...new Set(mapImgs.map(i => i.utilityType))].sort();
+      return `
+        <button class="nav-btn ${mapActive && f.type==='ALL' ? 'active' : ''}"
+          onclick="setFilter('map','${m}');setFilter('type','ALL')">
+          ${m} <span class="nav-count">${mapImgs.length}</span>
+        </button>
+        ${mapActive ? types.map(t => {
+          const tc = mapImgs.filter(i => i.utilityType === t).length;
+          return `<button class="nav-btn child ${f.type===t ? 'active' : ''}"
+            onclick="setFilter('type','${t}')">
+            ↳ ${t} <span class="nav-count">${tc}</span>
+          </button>`;
+        }).join('') : ''}
+      `;
+    }).join('')}
+  `;
+}
+
+// ══════════════════════════════════════════════
+// FILTERS
+// ══════════════════════════════════════════════
+function setFilter(key, val) { S.filter[key] = val; renderAll(); }
+
+function setSide(side) {
+  S.filter.side = side;
+  document.getElementById('btnCT').className  = 'side-btn' + (side==='CT'  ? ' active-ct'  : '');
+  document.getElementById('btnT').className   = 'side-btn' + (side==='T'   ? ' active-t'   : '');
+  document.getElementById('btnAll').className = 'side-btn' + (side==='ALL' ? ' active-all' : '');
+  renderAll();
+}
+
+function visible() {
+  const { map, type, side } = S.filter;
+  return S.images.filter(i =>
+    (map  === 'ALL' || i.map         === map)  &&
+    (type === 'ALL' || i.utilityType === type) &&
+    (side === 'ALL' || i.side        === side)
+  );
+}
+
+// ══════════════════════════════════════════════
+// CARD GRID
+// ══════════════════════════════════════════════
+function renderGrid() {
+  const grid = document.getElementById('cardGrid');
+  const vis  = visible();
+  const { map, type } = S.filter;
+
+  let title = map === 'ALL' ? 'All' : map;
+  if (type !== 'ALL') title += ' · ' + type;
+  document.getElementById('toolbarTitle').textContent = title;
+  document.getElementById('toolbarSub').textContent   =
+    vis.length ? `${vis.length} lineup${vis.length!==1?'s':''}` : '';
+
+  if (!vis.length) {
+    grid.innerHTML = `<div class="empty">
+      <div class="empty-icon">💨</div>
+      <div class="empty-title">${S.images.length ? 'No lineups match' : 'No lineups found'}</div>
+      <p>${S.images.length
+        ? 'Try a different map, utility type, or side filter.'
+        : 'The manifest.json appears empty. Add images to your repo and run generate-manifest.py.'
+      }</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = vis.map(img => {
+    const sel  = S.selected.has(img.fingerprint);
+    const cls  = sel ? (img.side==='CT' ? 'sel-ct' : 'sel-t') : '';
+    const url  = imgUrl(img);
+    return `<div class="util-card ${cls}" onclick="toggle('${img.fingerprint}')" data-fp="${img.fingerprint}">
+      <div class="img-wrap" id="wrap_${img.fingerprint}">
+        <img src="${url}" alt="${img.label}" loading="lazy"
+          onload="document.getElementById('wrap_${img.fingerprint}').classList.add('loaded')"
+          style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">
+      </div>
+      <div class="card-meta">
+        <div>
+          <div class="card-name">${img.label}</div>
+          <div class="card-sub">${img.map} · ${img.utilityType}</div>
+        </div>
+        <div style="display:flex;gap:5px;align-items:center">
+          <span class="side-tag tag-${img.side.toLowerCase()}">${img.side}</span>
+          <div class="check-circle">✓</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAll() { renderNav(); renderGrid(); updateCounts(); }
+
+// ══════════════════════════════════════════════
+// SELECTION
+// ══════════════════════════════════════════════
+function toggle(fp) {
+  S.selected.has(fp) ? S.selected.delete(fp) : S.selected.add(fp);
+  renderGrid(); updateCounts();
+}
+
+function selectAllVisible() {
+  visible().forEach(i => S.selected.add(i.fingerprint));
+  renderGrid(); updateCounts();
+}
+
+function clearAll() {
+  S.selected.clear(); renderGrid(); updateCounts();
+}
+
+function updateCounts() {
+  const n = S.selected.size;
+  document.getElementById('selCount').style.display = n ? 'inline-block' : 'none';
+  document.getElementById('selCount').textContent   = `${n} selected`;
+  document.getElementById('clearBtn').style.display = n ? 'inline-block' : 'none';
+  document.getElementById('viewBtn').disabled        = n === 0;
+}
+
+// ══════════════════════════════════════════════
+// VIEWER
+// ══════════════════════════════════════════════
+function openViewer() {
+  const sel = S.images.filter(i => S.selected.has(i.fingerprint));
+  if (!sel.length) return;
+
+  const layouts = bestLayouts(sel.length);
+  renderViewer(sel, layouts[0]);
+
+  const lb = document.getElementById('layoutBtns');
+  lb.innerHTML = layouts.map((l,i) =>
+    `<button class="layout-btn ${i===0?'active':''}" onclick="switchLayout(${i})">${l.c}×${l.r}</button>`
+  ).join('');
+  lb._layouts = layouts;
+  lb._sel     = sel;
+
+  const maps  = [...new Set(sel.map(i => i.map))];
+  const types = [...new Set(sel.map(i => i.utilityType))];
+  const sides = [...new Set(sel.map(i => i.side))];
+  document.getElementById('viewerTitle').textContent =
+    `${maps.length===1?maps[0]:'Mixed'} · ${types.length===1?types[0]:'Mixed'} · ${sides.length===1?sides[0]+'-Side':'CT+T'} · ${sel.length}`;
+
+  show('picker', false);
+  show('viewer');
+}
+
+function bestLayouts(n) {
+  const opts = [], seen = new Set();
+  for (let c = 1; c <= Math.min(n, 4); c++) {
+    const r = Math.ceil(n / c);
+    const k = `${c}x${r}`;
+    if (r <= 4 && !seen.has(k)) { seen.add(k); opts.push({c, r}); }
+  }
+  return opts.sort((a,b) => Math.abs(a.c/a.r - 16/9) - Math.abs(b.c/b.r - 16/9));
+}
+
+function renderViewer(sel, layout) {
+  const g = document.getElementById('viewerGrid');
+  g.style.gridTemplateColumns = `repeat(${layout.c}, 1fr)`;
+  g.style.gridTemplateRows    = `repeat(${layout.r}, 1fr)`;
+  g.innerHTML = sel.map(i =>
+    `<div class="viewer-cell"><img src="${imgUrl(i)}" alt="${i.label}"></div>`
+  ).join('');
+}
+
+function switchLayout(idx) {
+  const lb = document.getElementById('layoutBtns');
+  renderViewer(lb._sel, lb._layouts[idx]);
+  lb.querySelectorAll('.layout-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+}
+
+function closeViewer() { show('viewer', false); show('picker'); }
+
+// ══════════════════════════════════════════════
+// FULLSCREEN
+// ══════════════════════════════════════════════
+function toggleFS() {
+  if (!document.fullscreenElement) {
+    document.getElementById('viewer').requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
+document.addEventListener('fullscreenchange', () => {
+  document.getElementById('fsBtn').textContent =
+    document.fullscreenElement ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+});
+
+// ══════════════════════════════════════════════
+// KEYBOARD
+// ══════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('viewer').classList.contains('active')) return;
+  if (e.key === 'Escape') closeViewer();
+  if (e.key === 'h' || e.key === 'H') {
+    S.barHidden = !S.barHidden;
+    document.getElementById('viewerBar').classList.toggle('hidden', S.barHidden);
+  }
+  if (e.key === 'F11') { e.preventDefault(); toggleFS(); }
+});
+
+// ══════════════════════════════════════════════
+// NOTIFICATION
+// ══════════════════════════════════════════════
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
+function show(id, on = true) {
+  document.getElementById(id).classList.toggle('active', on);
+}
+
+// ── GO ──
+boot();
+</script>
+</body>
+</html>
