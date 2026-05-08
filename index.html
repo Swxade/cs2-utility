@@ -352,15 +352,13 @@ html, body {
 
 .util-card img {
   width: 100%;
-  aspect-ratio: 16/9;
-  object-fit: cover;
+  height: auto;
   display: block;
 }
 
 /* Loading skeleton */
 .util-card .img-wrap {
   width: 100%;
-  aspect-ratio: 16/9;
   background: var(--border);
   position: relative;
   overflow: hidden;
@@ -375,43 +373,21 @@ html, body {
 @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 .util-card .img-wrap.loaded::after { display: none; }
 
-.card-meta {
-  padding: 7px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-.card-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text);
-  line-height: 1.1;
-}
-.card-sub { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+.card-meta { display: none; }
+.card-name  { display: none; }
+.card-sub   { display: none; }
+.side-tag   { display: none; }
 
-.side-tag {
-  font-size: 9px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-.tag-ct { background: var(--ct-dim); color: var(--ct); border: 1px solid rgba(74,150,212,0.2); }
-.tag-t  { background: var(--t-dim);  color: var(--t);  border: 1px solid rgba(200,148,58,0.2); }
-
+/* Checkmark overlay — top-right corner */
 .check-circle {
-  width: 18px; height: 18px;
+  position: absolute;
+  top: 7px; right: 7px;
+  width: 20px; height: 20px;
   border-radius: 50%;
-  border: 1.5px solid var(--border-bright);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  background: rgba(0,0,0,0.45);
   display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: transparent;
+  font-size: 11px; color: transparent;
   flex-shrink: 0;
   transition: all 0.12s;
 }
@@ -536,7 +512,7 @@ html, body {
 .viewer-cell img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 
@@ -834,17 +810,8 @@ function renderGrid() {
       <div class="img-wrap" id="wrap_${img.fingerprint}">
         <img src="${url}" alt="${img.label}" loading="lazy"
           onload="document.getElementById('wrap_${img.fingerprint}').classList.add('loaded')"
-          style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">
-      </div>
-      <div class="card-meta">
-        <div>
-          <div class="card-name">${img.label}</div>
-          <div class="card-sub">${img.map} · ${img.utilityType}</div>
-        </div>
-        <div style="display:flex;gap:5px;align-items:center">
-          <span class="side-tag tag-${img.side.toLowerCase()}">${img.side}</span>
-          <div class="check-circle">✓</div>
-        </div>
+          style="width:100%;height:auto;display:block">
+        <div class="check-circle">✓</div>
       </div>
     </div>`;
   }).join('');
