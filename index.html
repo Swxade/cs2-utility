@@ -494,13 +494,13 @@ html, body {
   inset: 0;
   display: flex;
   background: #000;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-items: flex-start;
 }
 .viewer-grid {
-  flex: 1;
   display: grid;
   width: 100%;
-  height: 100%;
 }
 .viewer-cell {
   overflow: hidden;
@@ -511,8 +511,7 @@ html, body {
 }
 .viewer-cell img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  height: auto;
   display: block;
 }
 
