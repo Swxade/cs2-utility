@@ -909,7 +909,19 @@ function bestLayouts(n) {
   for (let c = 1; c <= Math.min(n, 4); c++) {
     const r = Math.ceil(n / c);
     const k = `${c}x${r}`;
-    if (r <= 4 && !seen.has(k)) { seen.add(k); opts.push({c, r}); }
+    // Only include layouts where the grid fills exactly — no empty cells
+    if (r <= 4 && !seen.has(k) && c * r === n) {
+      seen.add(k);
+      opts.push({c, r});
+    }
+  }
+  // If no exact fit exists (e.g. 5, 7), fall back to closest
+  if (!opts.length) {
+    for (let c = 1; c <= Math.min(n, 4); c++) {
+      const r = Math.ceil(n / c);
+      const k = `${c}x${r}`;
+      if (r <= 4 && !seen.has(k)) { seen.add(k); opts.push({c, r}); }
+    }
   }
   return opts.sort((a,b) => Math.abs(a.c/a.r - 16/9) - Math.abs(b.c/b.r - 16/9));
 }
