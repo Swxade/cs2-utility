@@ -41,60 +41,60 @@
       "fingerprint": "ancient|smokes|ct|ct spawn to elbow"
     },
     {
-      "path": "Ancient/Smokes/T Side/T - A - CT Spawn.jpg",
+      "path": "Ancient/Smokes/T Side/T - A - CT Spawn - 640x540.jpg",
       "map": "Ancient",
       "utilityType": "Smokes",
       "side": "T",
-      "label": "A - CT Spawn",
-      "fingerprint": "ancient|smokes|t|a - ct spawn"
+      "label": "A - CT Spawn - 640x540",
+      "fingerprint": "ancient|smokes|t|a - ct spawn - 640x540"
     },
     {
-      "path": "Ancient/Smokes/T Side/T - A - Donut.jpg",
+      "path": "Ancient/Smokes/T Side/T - A - Donut - 640x540.jpg",
       "map": "Ancient",
       "utilityType": "Smokes",
       "side": "T",
-      "label": "A - Donut",
-      "fingerprint": "ancient|smokes|t|a - donut"
+      "label": "A - Donut - 640x540",
+      "fingerprint": "ancient|smokes|t|a - donut - 640x540"
     },
     {
-      "path": "Ancient/Smokes/T Side/T - B - Long.jpg",
+      "path": "Ancient/Smokes/T Side/T - B - Long - 640x540.jpg",
       "map": "Ancient",
       "utilityType": "Smokes",
       "side": "T",
-      "label": "B - Long",
-      "fingerprint": "ancient|smokes|t|b - long"
+      "label": "B - Long - 640x540",
+      "fingerprint": "ancient|smokes|t|b - long - 640x540"
     },
     {
-      "path": "Ancient/Smokes/T Side/T - B - Short.jpg",
+      "path": "Ancient/Smokes/T Side/T - B - Short - 640x540.jpg",
       "map": "Ancient",
       "utilityType": "Smokes",
       "side": "T",
-      "label": "B - Short",
-      "fingerprint": "ancient|smokes|t|b - short"
+      "label": "B - Short - 640x540",
+      "fingerprint": "ancient|smokes|t|b - short - 640x540"
     },
     {
-      "path": "Ancient/Smokes/T Side/T - Mid - Donut.jpg",
+      "path": "Ancient/Smokes/T Side/T - Mid - Donut - 640x540.jpg",
       "map": "Ancient",
       "utilityType": "Smokes",
       "side": "T",
-      "label": "Mid - Donut",
-      "fingerprint": "ancient|smokes|t|mid - donut"
+      "label": "Mid - Donut - 640x540",
+      "fingerprint": "ancient|smokes|t|mid - donut - 640x540"
     },
     {
-      "path": "Ancient/Smokes/T Side/T - Mid - Highway.jpg",
+      "path": "Ancient/Smokes/T Side/T - Mid - Highway - 640x540.jpg",
       "map": "Ancient",
       "utilityType": "Smokes",
       "side": "T",
-      "label": "Mid - Highway",
-      "fingerprint": "ancient|smokes|t|mid - highway"
+      "label": "Mid - Highway - 640x540",
+      "fingerprint": "ancient|smokes|t|mid - highway - 640x540"
     },
     {
-      "path": "Ancient/Smokes/T Side/T - Mid - Red Room.jpg",
+      "path": "Ancient/Smokes/T Side/T - Mid - Red Room - 640x540.jpg",
       "map": "Ancient",
       "utilityType": "Smokes",
       "side": "T",
-      "label": "Mid - Red Room",
-      "fingerprint": "ancient|smokes|t|mid - red room"
+      "label": "Mid - Red Room - 640x540",
+      "fingerprint": "ancient|smokes|t|mid - red room - 640x540"
     }
   ]
 }
